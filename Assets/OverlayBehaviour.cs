@@ -35,6 +35,7 @@ public class OverlayBehaviour : MonoBehaviour
     }
 
     public void ShowImageOnClick(string godName) {
+        Debug.Log($"Showing sprite for {godName}");
         gameObject.SetActive(true);
 
         switch (godName){
@@ -73,7 +74,6 @@ public class OverlayBehaviour : MonoBehaviour
             // wait until next frame
             yield return null;
         }
-
 
         yield return new WaitForSeconds(0.25f);
 

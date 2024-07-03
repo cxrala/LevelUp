@@ -252,6 +252,7 @@ MonoBehaviour:
   manaContents: {fileID: 287366147}
   manaShadow: {fileID: 986292269}
   godsObject: {fileID: 689059318}
+  godOverlay: {fileID: 2087461219}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,19 +562,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 493447790}
         m_TargetAssemblyTypeName: ManaProperties, Assembly-CSharp
-        m_MethodName: DepleteMana
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: aphrodite
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2087461221}
-        m_TargetAssemblyTypeName: OverlayBehaviour, Assembly-CSharp
-        m_MethodName: ShowImageOnClick
+        m_MethodName: TriggerAbility
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -890,19 +879,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 493447790}
         m_TargetAssemblyTypeName: ManaProperties, Assembly-CSharp
-        m_MethodName: DepleteMana
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: athena
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2087461221}
-        m_TargetAssemblyTypeName: OverlayBehaviour, Assembly-CSharp
-        m_MethodName: ShowImageOnClick
+        m_MethodName: TriggerAbility
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1144,19 +1121,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 493447790}
         m_TargetAssemblyTypeName: ManaProperties, Assembly-CSharp
-        m_MethodName: DepleteMana
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: demeter
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2087461221}
-        m_TargetAssemblyTypeName: OverlayBehaviour, Assembly-CSharp
-        m_MethodName: ShowImageOnClick
+        m_MethodName: TriggerAbility
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1377,7 +1342,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 493447790}
         m_TargetAssemblyTypeName: ManaProperties, Assembly-CSharp
-        m_MethodName: DepleteMana
+        m_MethodName: TriggerAbility
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1387,18 +1352,6 @@ MonoBehaviour:
           m_StringArgument: ares
           m_BoolArgument: 0
         m_CallState: 1
-      - m_Target: {fileID: 2087461221}
-        m_TargetAssemblyTypeName: OverlayBehaviour, Assembly-CSharp
-        m_MethodName: ShowImageOnClick
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: ares
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &2139850367
 MonoBehaviour:
   m_ObjectHideFlags: 0

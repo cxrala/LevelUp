@@ -19,6 +19,7 @@ public class ManaProperties : MonoBehaviour
     [SerializeField] private GameObject manaShadow;
 
     [SerializeField] private GameObject godsObject;
+    [SerializeField] private GameObject godOverlay;
 
     // Start is called before the first frame update
     void Start()
@@ -55,8 +56,8 @@ public class ManaProperties : MonoBehaviour
         currManaShadow = newManaShadow > currentMana ? newManaShadow : currentMana;
     }
 
-    // public method to deplete mana
-    public void DepleteMana(string godName) {
+    // Public method to trigger ability
+    public void TriggerAbility(string godName) {
         currManaShadow = currentMana;
         float amount = 0;
 
@@ -84,6 +85,8 @@ public class ManaProperties : MonoBehaviour
 
         // success, perform action
         GodAction();
+        // Show overlay
+        godOverlay.GetComponent<OverlayBehaviour>().ShowImageOnClick(godName);
         Debug.Log($"Mana depleted by {amount} units");
         currentMana = newMana > 0 ? newMana : 0;
     }

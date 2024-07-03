@@ -1,10 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class ManaProperties : MonoBehaviour
 {
+
+    // constant variables
+    private const float manaUpperBound = 2000;
+    private const float rateUpperBound = 100;
+
+    // mana bar stats
     private float maxMana = 100;
     private float currentMana = 0;
     private float currManaShadow;
@@ -99,5 +107,13 @@ public class ManaProperties : MonoBehaviour
     public void NotEnoughManaAction() {
         // error for not enough mana
         Debug.Log("Not enough mana!");
+    }
+
+    public void UpgradeManaBar() {
+        float newMaxMana = (float) (1.2 * maxMana);
+        float newManaRate = (float) (1.1 * manaIncreaseRate);
+
+        maxMana = newMaxMana < manaUpperBound ? newMaxMana : manaUpperBound;
+        manaIncreaseRate = newManaRate < rateUpperBound ? newManaRate : rateUpperBound;
     }
 }

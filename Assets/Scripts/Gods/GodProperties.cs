@@ -9,6 +9,7 @@ public class GodProperties : MonoBehaviour
     public class God
     {
         public float abilityCost;
+        public string imgPath;
     }
 
     [System.Serializable]
@@ -24,8 +25,7 @@ public class GodProperties : MonoBehaviour
     // object containing all the god data
     public Gods godData;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         godData = JsonUtility.FromJson<Gods>(godJson.text);
     }

@@ -5,9 +5,9 @@ using UnityEngine.UIElements;
 
 public class ManaProperties : MonoBehaviour
 {
-    private float maxMana = 500;
-    private float currentMana = 0;
-    private float manaIncreaseRate = 50;
+    [SerializeField] private float maxMana = 10;
+    [SerializeField] private float currentMana = 5;
+    [SerializeField] private float manaIncreaseRate = 1;
 
     private RectTransform manaBorderRect;
     private RectTransform manaContentsRect;
@@ -36,5 +36,10 @@ public class ManaProperties : MonoBehaviour
     }
     private float WidthDelta(float dt) {
         return dt * manaIncreaseRate;
+    }
+
+    // public method to deplete mana
+    public void DepleteMana(float amount) {
+        currentMana -= amount;
     }
 }

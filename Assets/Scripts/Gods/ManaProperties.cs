@@ -5,9 +5,9 @@ using UnityEngine.UIElements;
 
 public class ManaProperties : MonoBehaviour
 {
-    [SerializeField] private float maxMana = 10;
-    [SerializeField] private float currentMana = 0;
-    [SerializeField] private float manaIncreaseRate = 1;
+    private float maxMana = 500;
+    private float currentMana = 0;
+    private float manaIncreaseRate = 50;
 
     private RectTransform manaBorderRect;
     private RectTransform manaContentsRect;
@@ -25,7 +25,16 @@ public class ManaProperties : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        manaBorderRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxMana * 50);
-        manaContentsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currentMana * 50);
+        manaBorderRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxMana + 5);
+        UpdateManaContents();
+        manaContentsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currentMana);
+    }
+
+    private void UpdateManaContents() {
+        float newMana = WidthDelta(Time.deltaTime) + currentMana;
+        currentMana = newMana < maxMana ? newMana : maxMana;
+    }
+    private float WidthDelta(float dt) {
+        return dt * manaIncreaseRate;
     }
 }

@@ -1,9 +1,5 @@
-using System.Collections;
-using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using UnityEngine;
-using System.ComponentModel;
 
 public class Country : MonoBehaviour
 {
@@ -14,13 +10,40 @@ public class Country : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float aggressiveness;
     [SerializeField, Range(0f, 1f)] private float hunger;
     [SerializeField, Range(0f, 1f)] private float fertility;
-
-    [SerializeField] private Country[] countryList;
+    [SerializeField] private Country[] countries;
     [SerializeField] private List<Country> connectingCountries;
-    
+
     private void Start() {
-        countryList = FindObjectsOfType<Country>();
+        countries = GetCountries();
+        connectingCountries = new List<Country>(); 
     }
 
+    private void Update() {
+        for (int i = 0; i < countries.Length; i++) {
+            if (countries[i] != this) { 
+                Vector3 dirVector = transform.position - countries[i].transform.position;
+                float distance = dirVector.magnitude;
 
+                if (distance < 10) {
+                    if (!connectingCountries.Contains(countries[i])) {
+                        connectingCountries.Add(countries[i]);
+                    }
+                } 
+                else {
+                    
+                    if (connectingCountries.Contains(countries[i])) {
+                        connectingCountries.Remove(countries[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    private float TechnologyRadius() {
+        return technology * 100;
+    }
+
+    public Country[] GetCountries() {
+        return FindObjectsOfType<Country>();
+    }
 }

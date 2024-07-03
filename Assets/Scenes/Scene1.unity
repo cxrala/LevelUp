@@ -310,7 +310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: connectingCountries.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: ConnectingCountries.Array.data[0]
@@ -319,7 +319,7 @@ PrefabInstance:
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: connectingCountries.Array.data[0]
       value: 
-      objectReference: {fileID: 9199788835713780745}
+      objectReference: {fileID: 0}
     - target: {fileID: 1229086505694537472, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: m_Name
       value: Country (1)
@@ -370,17 +370,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
---- !u!114 &1407026858 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
-  m_PrefabInstance: {fileID: 1407026857}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba81419cab4bbe7449c4adf4ba58e899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1788424752 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2642947669980334390, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
@@ -403,9 +392,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
+      propertyPath: connectingCountries.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: connectingCountries.Array.data[0]
       value: 
-      objectReference: {fileID: 9199788835713780745}
+      objectReference: {fileID: 0}
     - target: {fileID: 1229086505694537472, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: m_Name
       value: Country (2)
@@ -508,9 +501,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
+      propertyPath: connectingCountries.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: connectingCountries.Array.data[0]
       value: 
-      objectReference: {fileID: 1407026858}
+      objectReference: {fileID: 0}
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: connectingCountries.Array.data[1]
       value: 

@@ -18,6 +18,8 @@ public class ManaProperties : MonoBehaviour
     [SerializeField] private GameObject manaContents;
     [SerializeField] private GameObject manaShadow;
 
+    [SerializeField] private GameObject godsObject;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,15 +56,35 @@ public class ManaProperties : MonoBehaviour
     }
 
     // public method to deplete mana
-    public void DepleteMana(float amount) {
+    public void DepleteMana(string godName) {
         currManaShadow = currentMana;
+        float amount = 0;
+
+        GodProperties gods = godsObject.GetComponent<GodProperties>();
+        switch (godName){
+            case "ares":
+                amount = gods.godData.ares.abilityCost;
+                break;
+            case "athena":
+                amount = gods.godData.athena.abilityCost;
+                break;
+            case "aphrodite":
+                amount = gods.godData.aphrodite.abilityCost;
+                break;
+            case "demeter":
+                amount = gods.godData.demeter.abilityCost;
+                break;
+        }
+
         float newMana = currentMana - amount;
         if (newMana < 0) {
             NotEnoughManaAction();
             return;
         }
+
         // success, perform action
         GodAction();
+        Debug.Log($"Mana depleted by {amount} units");
         currentMana = newMana > 0 ? newMana : 0;
     }
 

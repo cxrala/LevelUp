@@ -1,0 +1,14 @@
+{
+    "ares": {
+        "abilityCost": 15
+    },
+    "athena": {
+        "abilityCost": 25
+    },
+    "aphrodite": {
+        "abilityCost": 10
+    },
+    "demeter": {
+        "abilityCost": 20
+    }
+}

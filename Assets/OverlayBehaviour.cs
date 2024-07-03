@@ -58,13 +58,37 @@ public class OverlayBehaviour : MonoBehaviour
     }
 
     IEnumerator ShowImage(string godName) {
-        // turn up opacity
-        img.color = new Color(1f, 1f, 1f, 1f);
+        float elapsedTime = 0f;
+        float lerpValue;
+        float transitionTime = 0.25f;
 
-        yield return new WaitForSeconds(1);
+        // turn up opacity
+        while (elapsedTime < transitionTime) {
+            lerpValue = Mathf.Clamp(elapsedTime / transitionTime, 0f, 1f);
+
+            img.color = new Color(1f, 1f, 1f, lerpValue);
+
+            elapsedTime += Time.deltaTime;
+
+            // wait until next frame
+            yield return null;
+        }
+
+
+        yield return new WaitForSeconds(0.25f);
 
         // turn down opacity
-        img.color = new Color(1f, 1f, 1f, 0f);
+        elapsedTime = 0;
+        while (elapsedTime < transitionTime) {
+            lerpValue = (float) Mathf.Clamp(elapsedTime / transitionTime, 0f, 1f);
+
+            img.color = new Color(1f, 1f, 1f, 1 - lerpValue);
+
+            elapsedTime += Time.deltaTime;
+
+            // wait until next frame
+            yield return null;
+        }
 
         gameObject.SetActive(false);
     }

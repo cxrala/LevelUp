@@ -1,0 +1,18 @@
+{
+    "ares": {
+        "abilityCost": 15,
+        "imgPath": "Sprites/ares"
+    },
+    "athena": {
+        "abilityCost": 25,
+        "imgPath": "Sprites/athena"
+    },
+    "aphrodite": {
+        "abilityCost": 10,
+        "imgPath": "Sprites/aphrodite"
+    },
+    "demeter": {
+        "abilityCost": 20,
+        "imgPath": "Sprites/demeter"
+    }
+}

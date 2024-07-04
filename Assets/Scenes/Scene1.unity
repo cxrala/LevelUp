@@ -305,6 +305,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
+      propertyPath: warRollWaitTime
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: attributeManager
       value: 
       objectReference: {fileID: 0}
@@ -398,6 +402,10 @@ PrefabInstance:
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: aggressiveness
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
+      propertyPath: warRollWaitTime
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 193551156501454554, guid: 29064412f5600404ba8ee053f371b1ac, type: 3}
       propertyPath: attributeManager

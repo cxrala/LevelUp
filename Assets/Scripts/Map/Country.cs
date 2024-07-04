@@ -4,6 +4,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using Unity.Mathematics;
 using System.Linq;
+using System;
 
 public class Country : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class Country : MonoBehaviour
     private const float warWaitTime = 30;
     [SerializeField] private float warRollWaitTime = 5f;
     private float warRollCountdown = 0f;
-    
+    private bool inWar;
 
     private void Start() {
         countries = GetCountries();
@@ -33,7 +34,10 @@ public class Country : MonoBehaviour
 
     private void Update() {
         ConnectCountries();
-        if (warRollCountdown <= 0f) {
+        WarCountdown();
+    }
+    private void WarCountdown() { //War can only occur after a fixed wait time (will be determined by aggressiveness)
+        if (warRollCountdown <= 0f && aggressiveness >= 0.8 && !inWar && connectingCountries != null) {
             StartCoroutine(RollWar());
             warRollCountdown = warRollWaitTime;
         }
@@ -41,12 +45,8 @@ public class Country : MonoBehaviour
         {
             warRollCountdown -= Time.deltaTime; 
         }
-        if(aggressiveness >= 0.8) {
-            RollWar();
-        }
     }
-
-    private void ConnectCountries() {
+    private void ConnectCountries() { //Adds/Removes connecting countries from connectingCountries
         for (int i = 0; i < countries.Length; i++) {
             if (countries[i] != this) { 
                 float distance = Vector3.Distance(transform.position,countries[i].transform.position);
@@ -73,46 +73,42 @@ public class Country : MonoBehaviour
         return FindObjectsOfType<Country>();
     }
 
-    public IEnumerator RollWar() {
+    public IEnumerator RollWar() { //Does the war logic
         Debug.Log("Rolling War");
-        if(aggressiveness > 0.8) {
-            float probabilityOfWar = aggressiveness;
-            float randomFloat = UnityEngine.Random.Range(0,100)/100;
-            if (randomFloat < probabilityOfWar && connectingCountries != null) {
-                if(connectingCountries != null) {
-                    int randomIndex = UnityEngine.Random.Range(0,connectingCountries.Count());
-                    Country attackedCountry = connectingCountries[randomIndex];
-                    Debug.Log("War Started between" + attackedCountry.countryName + countryName);
-                    StartCoroutine(ExecuteWar(attackedCountry));
+        float probabilityOfWar = Math.Min(aggressiveness*aggressiveness*aggressiveness,1);
+        float randomFloat = UnityEngine.Random.Range(0,100)/100;
+        if (randomFloat < probabilityOfWar && connectingCountries != null) {
+            if(connectingCountries != null) {
+                int randomIndex = UnityEngine.Random.Range(0,connectingCountries.Count()-1);
+                Country attackedCountry = connectingCountries[randomIndex];
+                Debug.Log("War Started between" + attackedCountry.countryName + countryName);
+                yield return new WaitForSeconds(1);
+                //initiate war
+                inWar = true;
+                //Do the ui stuff
+                int populationInWar = countryPopulation/4;
+                //temporarily subtract 25% of population
+                yield return new WaitForSeconds(10);
+
+                randomFloat = UnityEngine.Random.Range(0,100)/100;
+                if (randomFloat < 0.7f) // win
+                {
+                    Debug.Log("War Ended: " + countryName + " won");
+                    //add percentage of hunger
+                    //add percentage of faith
+                    //subtract 50% of people sent to war
+                    //add believers to country
                 }
+                else // loss
+                {
+                    Debug.Log("War Ended: " + attackedCountry.countryName + " won");
+                    //decrease hunger
+                    //decrease faith if god helped war
+                    //subtract 100% of people sent to war
+                    //believers of country not added
+                }
+                inWar = false;
             }
-        }
-        yield return new WaitForSeconds(1);
-    }
-
-
-    private IEnumerator ExecuteWar(Country attackedCountry)
-    {
-        //Do the ui stuff
-        //temporarily subtract 25% of population
-        yield return new WaitForSeconds(10);
-
-        float randomFloat = UnityEngine.Random.Range(0f, 1f);
-        if (randomFloat < 0.7f) // win
-        {
-            Debug.Log("War Ended: " + countryName + " won");
-            //add percentage of hunger
-            //add percentage of faith
-            //subtract 50% of people sent to war
-            //add believers to country
-        }
-        else // loss
-        {
-            Debug.Log("War Ended: " + attackedCountry.countryName + " won");
-            //decrease hunger
-            //decrease faith if god helped war
-            //subtract 100% of people sent to war
-            //believers of country not added
         }
     }
 }

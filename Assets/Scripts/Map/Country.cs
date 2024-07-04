@@ -25,6 +25,10 @@ public class Country : MonoBehaviour
     private float warRollCountdown = 0f;
     private bool inWar;
 
+    public string CountryName { get => countryName; set => countryName = value; }
+    public int CountryPopulation { get => countryPopulation; set => countryPopulation = value; }
+    public float Faith { get => faith; set => faith = value; }
+    
     private void Start() {
         countries = GetCountries();
         connectingCountries = new List<Country>();
@@ -75,36 +79,35 @@ public class Country : MonoBehaviour
 
     public IEnumerator RollWar() { //Does the war logic
         Debug.Log("Rolling War");
-        float probabilityOfWar = Math.Min(aggressiveness*aggressiveness*aggressiveness,1);
+        float probabilityOfWar = Math.Min(aggressiveness*aggressiveness*aggressiveness,1); //
         float randomFloat = UnityEngine.Random.Range(0,100)/100;
         if (randomFloat < probabilityOfWar && connectingCountries != null) {
             if(connectingCountries != null) {
                 int randomIndex = UnityEngine.Random.Range(0,connectingCountries.Count()-1);
                 Country attackedCountry = connectingCountries[randomIndex];
-                Debug.Log("War Started between" + attackedCountry.countryName + countryName);
+                Debug.Log("War Started between" + attackedCountry.CountryName + CountryName);
                 yield return new WaitForSeconds(1);
                 //initiate war
                 inWar = true;
                 //Do the ui stuff
-                int populationInWar = countryPopulation/4;
-                //temporarily subtract 25% of population
+                int populationInWar = CountryPopulation/4;
+                CountryPopulation-=populationInWar;
                 yield return new WaitForSeconds(10);
 
                 randomFloat = UnityEngine.Random.Range(0,100)/100;
                 if (randomFloat < 0.7f) // win
                 {
-                    Debug.Log("War Ended: " + countryName + " won");
+                    Debug.Log("War Ended: " + CountryName + " won");
                     //add percentage of hunger
                     //add percentage of faith
-                    //subtract 50% of people sent to war
-                    //add believers to country
+                    CountryPopulation+=populationInWar/2;
+                    
                 }
                 else // loss
                 {
-                    Debug.Log("War Ended: " + attackedCountry.countryName + " won");
+                    Debug.Log("War Ended: " + attackedCountry.CountryName + " won");
                     //decrease hunger
                     //decrease faith if god helped war
-                    //subtract 100% of people sent to war
                     //believers of country not added
                 }
                 inWar = false;

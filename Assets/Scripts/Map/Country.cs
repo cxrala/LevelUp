@@ -17,8 +17,6 @@ public class Country : MonoBehaviour
     private Food _food;
     private Population _population;
 
-
-    [SerializeField] private Country[] countries; // all the countries -- to refactor to a graph class
     [SerializeField] private HashSet<Country> neighbourCountries;
 
     private bool isInWar = false;

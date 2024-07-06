@@ -34,7 +34,6 @@ public class Population
 
     public IEnumerator SimulatePopulationChange() {
         while (true) {
-            Debug.Log("The population count is " + populationCount);
             yield return new WaitForSeconds(15);
             double growth = populationCount * (fertility.FertilityValue - deathRate);
             populationCount = Math.Clamp((long) Math.Floor(growth) + populationCount, 0, food.FoodValue);

@@ -36,9 +36,8 @@ public class Fertility : ITrait
     public IEnumerator DecreaseFertility() {
         while (true) {
             yield return new WaitForSeconds(10);
-            fertilityVariable -= 0.25;
+            fertilityVariable -= 0.01;
             UpdateFertility();
         }
     }
-
 }

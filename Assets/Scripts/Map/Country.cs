@@ -32,6 +32,12 @@ public class Country : MonoBehaviour
     public Population Population {
         get => _population;
     }
+    public long PopulationCount {
+        get => _population.PopulationCount;
+    }
+    public double FaithProportion {
+        get => _population.FaithProportion;
+    }
     
     private void Start() {
         countries = GetCountries();
@@ -41,6 +47,7 @@ public class Country : MonoBehaviour
         StartCoroutine(_food.UpdateFood());
         StartCoroutine(_population.SimulatePopulationChange());
         StartCoroutine(WarInitiator());
+        StartCoroutine(DebugLogCountryInfo());
     }
 
     private IEnumerator WarInitiator() {
@@ -93,5 +100,35 @@ public class Country : MonoBehaviour
 
     public Country[] GetCountries() {
         return FindObjectsOfType<Country>();
+    }
+
+
+    private IEnumerator DebugLogCountryInfo() {
+        while (true) {
+            Dictionary<string, string> countryStats = GetCountryStats();
+            countryStats["Time"] = UnityEngine.Time.fixedTime.ToString();
+            Debug.Log(ToDebugString(countryStats));
+            yield return new WaitForSeconds(10);
+        }
+    }
+
+    private Dictionary<string, string> GetCountryStats() {
+        Dictionary<string, string> countryStatDict = new Dictionary<string, string>
+        {
+            { "Name", countryName },
+            { "Aggressiveness", Aggressiveness.ToString() },
+            { "In War", isInWar.ToString() },
+            { "Fertility", _fertility.FertilityValue.ToString() },
+            { "Food", _food.FoodValue.ToString() },
+            { "Population Count", PopulationCount.ToString() },
+            { "Faith Proportion", FaithProportion.ToString() },
+            { "TechnologyValue", Technology.ToString() }
+        };
+        return countryStatDict;
+    }
+
+    private string ToDebugString (Dictionary<string, string> dictionary)
+    {
+        return "{" + string.Join(",\n", dictionary.Select(kv => kv.Key + "=" + kv.Value).ToArray()) + "}";
     }
 }

@@ -80,7 +80,7 @@ public class OverlayBehaviour : MonoBehaviour
         // turn down opacity
         elapsedTime = 0;
         while (elapsedTime < transitionTime) {
-            lerpValue = (float) Mathf.Clamp(elapsedTime / transitionTime, 0f, 1f);
+            lerpValue = Mathf.Clamp(elapsedTime / transitionTime, 0f, 1f);
 
             img.color = new Color(1f, 1f, 1f, 1 - lerpValue);
 

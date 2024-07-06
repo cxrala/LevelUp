@@ -29,6 +29,9 @@ public class Country : MonoBehaviour
     public double Technology {
         get => _technology.TechnologyValue;
     }
+    public double TechnologyDistance {
+        get => _technology.GetTechnologyRadius();
+    }
     public Population Population {
         get => _population;
     }
@@ -38,6 +41,8 @@ public class Country : MonoBehaviour
     public double FaithProportion {
         get => _population.FaithProportion;
     }
+
+    public List<Country> NeighbourCountries => neighbourCountries;
     
     private void Start() {
         countries = GetCountries();

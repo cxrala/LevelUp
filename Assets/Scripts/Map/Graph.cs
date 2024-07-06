@@ -20,7 +20,10 @@ public class Graph : MonoBehaviour
     public void TechnologyUpdated(Country country) {
         foreach (Country neighbour in country.NeighbourCountries) {
             if (capitalCityDistances[(country, neighbour)] <= country.TechnologyDistance) {
-                
+                if (!country.NeighbourCountries.Contains(neighbour)) { // can remove this check if we make it a set.
+                    country.NeighbourCountries.Add(neighbour);
+                    Debug.Log("Successfully added the country!");
+                }
             }
         }
     }

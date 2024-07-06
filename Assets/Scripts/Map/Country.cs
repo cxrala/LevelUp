@@ -9,17 +9,17 @@ using System;
 public class Country : MonoBehaviour
 {
 
-    [SerializeField] private string countryName;
+    private string countryName;
 
-    private Aggressiveness _aggressiveness = new Aggressiveness(0.2);
-    private Technology _technology = new Technology(0.2);
-    private Fertility _fertility = new Fertility();
-    private Food _food = new Food();
+    private Aggressiveness _aggressiveness;
+    private Technology _technology;
+    private Fertility _fertility;
+    private Food _food;
     private Population _population;
 
 
     [SerializeField] private Country[] countries; // all the countries -- to refactor to a graph class
-    [SerializeField] private List<Country> neighbourCountries;
+    [SerializeField] private HashSet<Country> neighbourCountries;
 
     private bool isInWar = false;
     public string CountryName { get => countryName; set => countryName = value; }
@@ -42,12 +42,30 @@ public class Country : MonoBehaviour
         get => _population.FaithProportion;
     }
 
-    public List<Country> NeighbourCountries => neighbourCountries;
+    public HashSet<Country> NeighbourCountries => neighbourCountries;
+
+    public void Init(
+        Graph graph,
+        HashSet<Country> neighbours,
+        string countryName,
+        bool isProphetDeployedHere
+    ) {
+        this.countryName = countryName;
+        _aggressiveness = new Aggressiveness(UnityEngine.Random.Range(0.2f, 0.5f));
+        _technology = new Technology(UnityEngine.Random.Range(0.2f, 0.5f), this, graph);
+        _fertility = new Fertility(UnityEngine.Random.Range(0.5f, 0.8f));
+        _food = new Food();
+        long randomPopulation = UnityEngine.Random.Range(100, 300);
+        if (isProphetDeployedHere) {
+            _population = Population.GetProphetPopulation(_fertility, _food, randomPopulation);
+        } else {
+            _population = Population.GetDefaultPopulation(_fertility, _food, UnityEngine.Random.Range(100, 300));
+        }
+        neighbourCountries = neighbours;
+    }
     
     private void Start() {
-        countries = GetCountries();
-        neighbourCountries = new List<Country>();
-        _population = Population.GetDefaultPopulation(_fertility, _food, UnityEngine.Random.Range(100, 300));
+        Init(null, new HashSet<Country>(), "foo", false);
         StartCoroutine(_fertility.DecreaseFertility());
         StartCoroutine(_food.UpdateFood());
         StartCoroutine(_population.SimulatePopulationChange());
@@ -60,7 +78,7 @@ public class Country : MonoBehaviour
             if (!isInWar && neighbourCountries.Count != 0) {
                 Debug.Log("Rolling for war");
                 int randomIndex = UnityEngine.Random.Range(0,neighbourCountries.Count() - 1);
-                Country attackedCountry = neighbourCountries[randomIndex];
+                Country attackedCountry = neighbourCountries.ToList()[randomIndex];
                 bool isWarInitiated = _aggressiveness.RollWar(this, attackedCountry);
                 if (isWarInitiated && this != attackedCountry) {
                     isInWar = true;
@@ -82,26 +100,6 @@ public class Country : MonoBehaviour
     private void Update() {
         // ConnectCountries(); refactor out of this class
     }
-
-    // private void ConnectCountries() { //Adds/Removes connecting countries from connectingCountries
-    //     for (int i = 0; i < countries.Length; i++) {
-    //         if (countries[i] != this) { 
-    //             float distance = Vector3.Distance(transform.position,countries[i].transform.position);
-
-    //             if (distance < _technology.GetTechnologyRadius()) {
-    //                 if (!neighbourCountries.Contains(countries[i])) {
-    //                     neighbourCountries.Add(countries[i]);
-    //                 }
-    //             } 
-    //             else {
-                    
-    //                 if (neighbourCountries.Contains(countries[i])) {
-    //                     neighbourCountries.Remove(countries[i]);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     public Country[] GetCountries() {
         return FindObjectsOfType<Country>();

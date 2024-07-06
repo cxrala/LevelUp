@@ -2,21 +2,17 @@ using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 
 public class WorldMap {
-    private readonly MapCell[] _cells;
-    private readonly int _width;
-    private readonly int _height;
+    private readonly MapCell[,] _cells;
 
-    public WorldMap(int width, int height, MapCell[] cells) {
-        _width = width;
-        _height = height;
+    public WorldMap(MapCell[,] cells) {
         _cells = cells;
     }
 
-    public int Width => _width;
-    public int Height => _height;
+    public int Width => _cells.GetLength(1);
+    public int Height => _cells.GetLength(0);
     public int Area => Width * Height;
     
     public MapCell At(int x, int y) {
-        return _cells[_width * y + x];
+        return _cells[y, x];
     }
 }

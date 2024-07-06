@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CountryMouseInteraction : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class CountryMouseInteraction : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Pointer clicked");
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log("Pointer down!");
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -20,10 +25,14 @@ public class CountryMouseInteraction : MonoBehaviour, IPointerEnterHandler, IPoi
         Debug.Log("Pointer Exited");
     }
 
+    public void OnPointerUp(PointerEventData eventData)
+    {
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        Debug.Log("Hello world");
     }
 
     // Update is called once per frame

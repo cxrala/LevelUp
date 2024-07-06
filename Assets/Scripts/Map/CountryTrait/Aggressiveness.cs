@@ -45,7 +45,7 @@ public class Aggressiveness : ITrait
     }
 
     public IEnumerator InitiateWar(Country attacker, Country defender) {
-
+        Debug.Log("War has been initiated between " + attacker + " & " + defender);
         long numAttackers = attacker.Population.PopulationCount / 4;
         long numDefenders = defender.Population.PopulationCount / 4;
         attacker.Population.CullPopulation(numAttackers);

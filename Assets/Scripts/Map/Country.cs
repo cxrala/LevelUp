@@ -8,7 +8,7 @@ using System;
 
 public class Country : MonoBehaviour
 {
-    
+
     [SerializeField] private string countryName;
 
     private Aggressiveness _aggressiveness = new Aggressiveness(0.2);
@@ -36,24 +36,26 @@ public class Country : MonoBehaviour
     private void Start() {
         countries = GetCountries();
         neighbourCountries = new List<Country>();
-        _population = Population.GetDefaultPopulation(_fertility, _food, UnityEngine.Random.Range(0, 100));
+        _population = Population.GetDefaultPopulation(_fertility, _food, UnityEngine.Random.Range(100, 300));
         StartCoroutine(_fertility.DecreaseFertility());
         StartCoroutine(_food.UpdateFood());
         StartCoroutine(_population.SimulatePopulationChange());
+        StartCoroutine(WarInitiator());
     }
 
     private IEnumerator WarInitiator() {
         while (true) {
-            if (!isInWar) {
+            if (!isInWar && neighbourCountries.Count != 0) {
+                Debug.Log("Rolling for war");
                 int randomIndex = UnityEngine.Random.Range(0,neighbourCountries.Count() - 1);
                 Country attackedCountry = neighbourCountries[randomIndex];
                 bool isWarInitiated = _aggressiveness.RollWar(this, attackedCountry);
-                if (isWarInitiated) {
+                if (isWarInitiated && this != attackedCountry) {
                     isInWar = true;
                     StartCoroutine(_aggressiveness.InitiateWar(this, attackedCountry));
                 }
-                yield return new WaitForSeconds(UnityEngine.Random.Range(8, 20));
             }
+            yield return new WaitForSeconds(UnityEngine.Random.Range(8, 20));
         }
     }
 
@@ -69,25 +71,25 @@ public class Country : MonoBehaviour
         // ConnectCountries(); refactor out of this class
     }
 
-    private void ConnectCountries() { //Adds/Removes connecting countries from connectingCountries
-        for (int i = 0; i < countries.Length; i++) {
-            if (countries[i] != this) { 
-                float distance = Vector3.Distance(transform.position,countries[i].transform.position);
+    // private void ConnectCountries() { //Adds/Removes connecting countries from connectingCountries
+    //     for (int i = 0; i < countries.Length; i++) {
+    //         if (countries[i] != this) { 
+    //             float distance = Vector3.Distance(transform.position,countries[i].transform.position);
 
-                if (distance < _technology.GetTechnologyRadius()) {
-                    if (!neighbourCountries.Contains(countries[i])) {
-                        neighbourCountries.Add(countries[i]);
-                    }
-                } 
-                else {
+    //             if (distance < _technology.GetTechnologyRadius()) {
+    //                 if (!neighbourCountries.Contains(countries[i])) {
+    //                     neighbourCountries.Add(countries[i]);
+    //                 }
+    //             } 
+    //             else {
                     
-                    if (neighbourCountries.Contains(countries[i])) {
-                        neighbourCountries.Remove(countries[i]);
-                    }
-                }
-            }
-        }
-    }
+    //                 if (neighbourCountries.Contains(countries[i])) {
+    //                     neighbourCountries.Remove(countries[i]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     public Country[] GetCountries() {
         return FindObjectsOfType<Country>();

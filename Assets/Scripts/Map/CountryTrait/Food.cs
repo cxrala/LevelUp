@@ -15,7 +15,7 @@ public class Food : ITrait
         this.foodRate = foodRate;
     }
 
-    public Food() : this(0.5) {}
+    public Food() : this(1.5) {}
 
     public bool UpgradeTrait()
     {
@@ -29,7 +29,7 @@ public class Food : ITrait
 
     public IEnumerator UpdateFood() {
         while (true) {
-            foodValue = (long) (foodValue * foodRate);
+            foodValue = (long) (foodValue + 100 * foodRate);
             yield return new WaitForSeconds(2);
         }
     }

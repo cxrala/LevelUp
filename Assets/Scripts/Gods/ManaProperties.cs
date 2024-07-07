@@ -109,7 +109,7 @@ public class ManaProperties : MonoBehaviour
     public void GodAction(string godName) {
         // update listeners with events
         Country country = pointerInformation.LastClicked;
-        if (!(country == null)) return;
+        if (country == null) return;
         ITrait trait = country.GodBlessing(godName);
         trait.UpgradeTrait();
         Debug.Log("Successfully performed God action.");

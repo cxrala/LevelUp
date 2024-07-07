@@ -111,16 +111,42 @@ public class MapGen : IMapGen
             }
             ++iterations;
         }
+        int[] countriesArr = new int[countries];
+        for (int i = 0; i < countries; ++i) {
+            countriesArr[i] = i;
+        }
+        int remainingWaterCountries = countries;
+        while (remainingWaterCountries > countries / 2) {
+            int makeLand = rng.Next(remainingWaterCountries);
+            --remainingWaterCountries;
+            (countriesArr[makeLand], countriesArr[remainingWaterCountries]) = (countriesArr[remainingWaterCountries], countriesArr[makeLand]);
+        }
+        int?[] substitutions = new int?[countries];
+        for (int i = remainingWaterCountries; i < countries; ++i) {
+            substitutions[countriesArr[i]] = i - remainingWaterCountries;
+        }
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                int? substitution = substitutions[(int) grid[y, x].CountryIndex];
+                if (substitution == null) {
+                    grid[y, x] = MapCell.WATER;
+                } else if (grid[y, x].IsCapitalCity) {
+                    grid[y, x] = MapCell.CapitalCity((int) substitution);
+                } else {
+                    grid[y, x] = MapCell.CountryCell((int) substitution);
+                }
+            }
+        }
         return new WorldMap(grid, ComputeGraph(grid));
     }
 
-    private static HashSet<(int, int)> ComputeGraph(MapCell[,] grid) {
+    private static HashSet<(int?, int?)> ComputeGraph(MapCell[,] grid) {
         int height = grid.GetLength(0);
         int width = grid.GetLength(1);
         bool[,] visited = new bool[height, width];
         var stack = new List<(int, int, int)>();
         stack.Add((0, 0, 0));
-        var edges = new HashSet<(int, int)>();
+        var edges = new HashSet<(int?, int?)>();
         do {
             var (xp, yp, d) = stack.Last();
             visited[yp, xp] = true;
@@ -140,8 +166,8 @@ public class MapGen : IMapGen
                     break;
             }
             if (x >= 0 && x < width && y >= 0 && y < height) {
-                var currIndex = (int) grid[y, x].CountryIndex;
-                var prevIndex = (int) grid[yp, xp].CountryIndex;
+                int? currIndex = grid[y, x].CountryIndex;
+                int? prevIndex = grid[yp, xp].CountryIndex;
                 if (currIndex != prevIndex) {
                     edges.Add((currIndex, prevIndex));
                     edges.Add((prevIndex, currIndex));

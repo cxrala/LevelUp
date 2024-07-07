@@ -15,12 +15,13 @@ public class MapDisplayManager : MonoBehaviour
     {
         // to delete: initialise map
         map = new List<List<int>>();
-        map.Add(new List<int>{0, 1, 1, 0, 1, 1, 0});
-        map.Add(new List<int>{1, 1, 1, 0, 1, 1, 1});
-        map.Add(new List<int>{1, 1, 1, 0, 3, 3, 1});
+        map.Add(new List<int>{0, 1, 1, 0, 5, 5, 0});
+        map.Add(new List<int>{1, 1, 1, 0, 5, 5, 5});
+        map.Add(new List<int>{1, 1, 1, 0, 3, 3, 5});
         map.Add(new List<int>{0, 0, 0, 0, 3, 3, 0});
         map.Add(new List<int>{0, 0, 2, 2, 2, 3, 0});
         map.Add(new List<int>{0, 0, 0, 2, 2, 3, 0});
+        map.Add(new List<int>{0, 0, 0, 0, 0, 3, 0});
 
         // loop over map cells
         foreach (List<int> row in map) {
@@ -29,19 +30,45 @@ public class MapDisplayManager : MonoBehaviour
                     // instantiate a tilemap for the country
                     GameObject newCountry = Instantiate(countryTilemap, new Vector3(0, 0, 0), Quaternion.identity, grid.transform);
                     newCountry.name = countryID.ToString();
+
                     newCountry.GetComponent<CountryTilemap>().MapDisplayManager = gameObject;
                     newCountry.GetComponent<CountryTilemap>().countryID = countryID;
-                    // Debug.Log(newCountry.GetComponent<CountryTilemap>().MapDisplayManager);
+
                     countries.Add(countryID, newCountry);
                 }
             }
         }
+
+        // generate and assign colours
+        int k = countries.Count;
+        List<Color> colours = GenerateColours(k);
+        int i = 0;
+        foreach (int countryID in countries.Keys) {
+            countries[countryID].GetComponent<CountryTilemap>().countryColour = colours[i];
+            i++;
+        }
+    }
+    
+    // generates k random colours that look (more or less) good together - totally stole the idea off this btw
+    // https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+    List<Color> GenerateColours(int k) {
+        List<Color> colours = new List<Color>();
+        
+        float golden_ratio_conjugate = 0.618033988749895f;
+        float h = Random.Range(0f, 1f); // use random start value
+        
+        for (int i = 0; i < k; i++) {
+            colours.Add(Color.HSVToRGB(h, 0.4f, 0.95f));
+            h += golden_ratio_conjugate;
+            h %= 1;
+        }
+
+        return colours;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    // resize grid cell size based on map size
+    void AdjustGrid() {
+        // by default, scale of (1, 1) yields a 10x18 grid
     }
 
     public List<List<int>> GetMap() {

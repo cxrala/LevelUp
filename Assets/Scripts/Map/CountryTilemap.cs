@@ -9,14 +9,10 @@ public class CountryTilemap : MonoBehaviour
     [SerializeField] private Tile fillTile; // tile to fill the country's tilemap with
     
     private Vector3Int tilemapSize; // size of the tilemap
-    private Vector3Int minCoord; // minimum coordinate of the tilemap
 
-    // a binary map with 1 where the country is and 0 elsewhere
-    // for now, assume 1-to-1 correspondence between mask elements and the tilemap cells
-    // private List<List<int>> mapMask = new List<List<int>>();
-
-    public int countryID; // the id representing this country in the map. probably shouldn't be public but wtv
-    private Color countryColour; // the colour with which the country is represented on the map
+    // the following probably should not be public but this is the life we live
+    public int countryID; // the id representing this country in the map
+    public Color countryColour; // the colour with which the country is represented on the map
 
     private GameObject mapDisplayManager; // handles the generation of all tilemaps
     public GameObject MapDisplayManager { get; set; }
@@ -27,35 +23,29 @@ public class CountryTilemap : MonoBehaviour
         tilemap = GetComponent<Tilemap>();
 
         // get bounds
-        // Debug.Log($"original cell bounds: {tilemap.cellBounds.min}, {tilemap.cellBounds.max}");
         tilemapSize = tilemap.cellBounds.size;
-        minCoord = tilemap.cellBounds.min;
+        Vector3Int minCoord = tilemap.cellBounds.min;
+        Vector3Int maxCoord = tilemap.cellBounds.max;
 
-        // to delete: define the mask
-        // mapMask.Add(new List<int>{0, 1, 1, 0, 1, 1, 0});
-        // mapMask.Add(new List<int>{1, 1, 1, 1, 1, 1, 1});
-        // mapMask.Add(new List<int>{1, 1, 1, 1, 1, 1, 1});
-        // mapMask.Add(new List<int>{0, 1, 1, 1, 1, 1, 0});
-        // mapMask.Add(new List<int>{0, 0, 1, 1, 1, 0, 0});
-        // mapMask.Add(new List<int>{0, 0, 0, 1, 0, 0, 0});
+        // adjust bounds and size to keep within a certain window, with margins of 1/8 the relevant dimension
+        // tilemapSize.x -= Mathf.RoundToInt(tilemapSize.x / 4);
+        // tilemapSize.y -= Mathf.RoundToInt(tilemapSize.y / 4);
+        // minCoord.x -= Mathf.RoundToInt(minCoord.x / 4);
+        // minCoord.y -= Mathf.RoundToInt(minCoord.y / 4);
+
+        Debug.Log($"size: {tilemapSize}, min coord: {minCoord}, max coord: {maxCoord}");
 
         if (MapDisplayManager == null) {
             Debug.Log("no map display manager attached");
         }
         List<List<int>> map = MapDisplayManager.GetComponent<MapDisplayManager>().GetMap();
 
-        // to delete: define the colour
-        countryColour = Color.green;
-
         // iterate over each tile and colour it 
         for (int i = 0; i < map.Count; i++) {
             for (int j = 0; j < map[0].Count; j++) {
                 if (map[i][j] == countryID) {
                     int x = minCoord.x + j;
-                    x = (x >= 0) ? x - 1 : x;
-
-                    int y = minCoord.y + tilemapSize.y - i;
-                    y = (y >= 0) ? y - 1 : y;
+                    int y = maxCoord.y - i - 1; // workaround for now to stop it going out of bounds
 
                     fillCell(new Vector3Int(x, y, 0), countryColour);
                     // Debug.Log($"filled cell at {x}, {y}");
@@ -83,13 +73,7 @@ public class CountryTilemap : MonoBehaviour
     // OnMouseDown is called when the user has pressed the mouse button while over the Collider.
     // .... for some reason it works with Box Collider 2D but not Tilemap Collider 2D
     void OnMouseDown() {
-        Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int cellPos = tilemap.WorldToCell(mouseWorldPos);
-
-        // check if a tile was clicked on
-        if (tilemap.HasTile(cellPos)) {
-            Debug.Log($"clicked on {gameObject.name} at {cellPos}");
-            // TODO: perform action associated with selecting the country associated with this tilemap
-        }
+        Debug.Log($"clicked on {gameObject.name}");
+        // TODO: perform action associated with selecting the country associated with this tilemap
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 
 public class MapGen : IMapGen
 {
@@ -73,8 +74,7 @@ public class MapGen : IMapGen
                         if (countryStatus != MapCell.WATER) {
                             grid[prev.y, prev.x] = MapCell.CountryCell((int) countryStatus.CountryIndex);
                             index = unfilled.FindIndex(sq => sq == prev);
-                            unfilled[index] = unfilled.Last();
-                            unfilled.RemoveAt(unfilled.Count - 1);
+                            unfilled.RemoveAtSwapBack(index);
                             break;
                         }
                         prev = square;
@@ -111,6 +111,56 @@ public class MapGen : IMapGen
             }
             ++iterations;
         }
-        return new WorldMap(grid);
+        return new WorldMap(grid, ComputeGraph(grid));
+    }
+
+    private static HashSet<(int, int)> ComputeGraph(MapCell[,] grid) {
+        int height = grid.GetLength(0);
+        int width = grid.GetLength(1);
+        bool[,] visited = new bool[height, width];
+        var stack = new List<(int, int, int)>();
+        stack.Add((0, 0, 0));
+        var edges = new HashSet<(int, int)>();
+        do {
+            var (xp, yp, d) = stack.Last();
+            visited[yp, xp] = true;
+            var (x, y) = (xp, yp);
+            switch (d) {
+                case 0:
+                    --x;
+                    break;
+                case 1:
+                    ++x;
+                    break;
+                case 2:
+                    --y;
+                    break;
+                case 3:
+                    ++y;
+                    break;
+            }
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                var currIndex = (int) grid[y, x].CountryIndex;
+                var prevIndex = (int) grid[yp, xp].CountryIndex;
+                if (currIndex != prevIndex) {
+                    edges.Add((currIndex, prevIndex));
+                    edges.Add((prevIndex, currIndex));
+                }
+                if (!visited[y, x]) {
+                    stack.Add((x, y, 0));
+                    continue;
+                }
+            }
+            while (stack.Any()) {
+                var (xl, yl, dl) = stack.Last();
+                if (dl == 3) {
+                    stack.RemoveAt(stack.Count - 1);
+                } else {
+                    stack[stack.Count - 1] = (xl, yl, dl + 1);
+                    break;
+                }
+            }
+        } while (stack.Any());
+        return edges;
     }
 }

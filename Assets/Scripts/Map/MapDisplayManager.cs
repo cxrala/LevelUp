@@ -29,7 +29,8 @@ public class MapDisplayManager : MonoBehaviour
         // map.Add(new List<int>{0, 0, 0, 0, 0, 3, 0});
 
         // to delete: randomly initialise map
-        GenerateRandomMap();
+        // GenerateRandomMap();
+        GenerateActualMap();
 
         // adjust grid based on shape of input
         AdjustGrid();
@@ -60,24 +61,39 @@ public class MapDisplayManager : MonoBehaviour
         }
     }
 
-    // to delete: generate random noise as a map for testing purposes
-    void GenerateRandomMap() {
-        scaleFactor = Random.Range(10, 50); // change to 10, 100 later
-        // scaleFactor = 1;
-        map = new List<List<int>>();
-
-        for (int row = 0; row < scaleFactor * 9; row++) {
-            List<int> newRow = new List<int>();
-
-            for (int col = 0; col < scaleFactor * 16; col++) {
-                newRow.Add(Random.Range(0, 5));
+    void GenerateActualMap() {
+        scaleFactor = 10;
+        var gen = new MapGen(new System.Random());
+        var generated = gen.GenerateWorld(width: scaleFactor * 16, height: scaleFactor * 9, 150);
+        map = new List<List<int>>(generated.Height);
+        for (int y = 0; y < generated.Height; ++y) {
+            List<int> newRow = new List<int>(generated.Width);
+            for (int x = 0; x < generated.Width; ++x) {
+                newRow.Add((int) generated.At(x, y).CountryIndex);
             }
-
             map.Add(newRow);
         }
-
         gridSize = new Vector2Int(map[0].Count, map.Count);
     }
+
+    // to delete: generate random noise as a map for testing purposes
+    // void GenerateRandomMap() {
+    //     scaleFactor = Random.Range(10, 50); // change to 10, 100 later
+    //     // scaleFactor = 1;
+    //     map = new List<List<int>>();
+
+    //     for (int row = 0; row < scaleFactor * 9; row++) {
+    //         List<int> newRow = new List<int>();
+
+    //         for (int col = 0; col < scaleFactor * 16; col++) {
+    //             newRow.Add(Random.Range(0, 5));
+    //         }
+
+    //         map.Add(newRow);
+    //     }
+
+    //     gridSize = new Vector2Int(map[0].Count, map.Count);
+    // }
     
     // generates k random colours that look (more or less) good together - totally stole the idea off this btw
     // https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/

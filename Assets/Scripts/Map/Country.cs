@@ -8,110 +8,127 @@ using System;
 
 public class Country : MonoBehaviour
 {
-    
+
     [SerializeField] private string countryName;
-    [SerializeField] private int countryPopulation;
-    [SerializeField] private float faith; //faith always less that country population
-    [SerializeField, Range(0f, 1f)] private float technology;
-    [SerializeField, Range(0f, 1f)] private float aggressiveness;
-    [SerializeField, Range(0f, 1f)] private float hunger;
-    [SerializeField, Range(0f, 1f)] private float fertility;
 
-    [SerializeField] private Country[] countries;
-    [SerializeField] private List<Country> connectingCountries;
+    private Aggressiveness _aggressiveness = new Aggressiveness(0.2);
+    private Technology _technology = new Technology(0.2);
+    private Fertility _fertility = new Fertility();
+    private Food _food = new Food();
+    private Population _population;
 
-    private const float warWaitTime = 30;
-    [SerializeField] private float warRollWaitTime = 5f;
-    private float warRollCountdown = 0f;
-    private bool inWar;
 
+    [SerializeField] private Country[] countries; // all the countries -- to refactor to a graph class
+    [SerializeField] private List<Country> neighbourCountries;
+
+    private bool isInWar = false;
     public string CountryName { get => countryName; set => countryName = value; }
-    public int CountryPopulation { get => countryPopulation; set => countryPopulation = value; }
-    public float Faith { get => faith; set => faith = value; }
+    public double Aggressiveness {
+        get => _aggressiveness.AggressivenessValue;
+    }
+    public double Technology {
+        get => _technology.TechnologyValue;
+    }
+    public Population Population {
+        get => _population;
+    }
+    public long PopulationCount {
+        get => _population.PopulationCount;
+    }
+    public double FaithProportion {
+        get => _population.FaithProportion;
+    }
     
     private void Start() {
         countries = GetCountries();
-        connectingCountries = new List<Country>();
-        
+        neighbourCountries = new List<Country>();
+        _population = Population.GetDefaultPopulation(_fertility, _food, UnityEngine.Random.Range(100, 300));
+        StartCoroutine(_fertility.DecreaseFertility());
+        StartCoroutine(_food.UpdateFood());
+        StartCoroutine(_population.SimulatePopulationChange());
+        StartCoroutine(WarInitiator());
+        StartCoroutine(DebugLogCountryInfo());
+    }
+
+    private IEnumerator WarInitiator() {
+        while (true) {
+            if (!isInWar && neighbourCountries.Count != 0) {
+                Debug.Log("Rolling for war");
+                int randomIndex = UnityEngine.Random.Range(0,neighbourCountries.Count() - 1);
+                Country attackedCountry = neighbourCountries[randomIndex];
+                bool isWarInitiated = _aggressiveness.RollWar(this, attackedCountry);
+                if (isWarInitiated && this != attackedCountry) {
+                    isInWar = true;
+                    StartCoroutine(_aggressiveness.InitiateWar(this, attackedCountry));
+                }
+            }
+            yield return new WaitForSeconds(UnityEngine.Random.Range(8, 20));
+        }
+    }
+
+    public void CompleteWar(long numSurvivors, bool warWon) {
+        if (_population.FaithProportion > 0 && warWon) _population.IncFaith(0.25);
+        if (_population.FaithProportion < 0 && !warWon) _population.DecFaith(0.8);
+        _population.AddPopulation(numSurvivors);
+        isInWar = false;
     }
 
 
     private void Update() {
-        ConnectCountries();
-        WarCountdown();
+        // ConnectCountries(); refactor out of this class
     }
-    private void WarCountdown() { //War can only occur after a fixed wait time (will be determined by aggressiveness)
-        if (warRollCountdown <= 0f && aggressiveness >= 0.8 && !inWar && connectingCountries != null) {
-            StartCoroutine(RollWar());
-            warRollCountdown = warRollWaitTime;
-        }
-        else
-        {
-            warRollCountdown -= Time.deltaTime; 
-        }
-    }
-    private void ConnectCountries() { //Adds/Removes connecting countries from connectingCountries
-        for (int i = 0; i < countries.Length; i++) {
-            if (countries[i] != this) { 
-                float distance = Vector3.Distance(transform.position,countries[i].transform.position);
 
-                if (distance < TechnologyRadius()) {
-                    if (!connectingCountries.Contains(countries[i])) {
-                        connectingCountries.Add(countries[i]);
-                    }
-                } 
-                else {
+    // private void ConnectCountries() { //Adds/Removes connecting countries from connectingCountries
+    //     for (int i = 0; i < countries.Length; i++) {
+    //         if (countries[i] != this) { 
+    //             float distance = Vector3.Distance(transform.position,countries[i].transform.position);
+
+    //             if (distance < _technology.GetTechnologyRadius()) {
+    //                 if (!neighbourCountries.Contains(countries[i])) {
+    //                     neighbourCountries.Add(countries[i]);
+    //                 }
+    //             } 
+    //             else {
                     
-                    if (connectingCountries.Contains(countries[i])) {
-                        connectingCountries.Remove(countries[i]);
-                    }
-                }
-            }
-        }
-    }
-    private float TechnologyRadius() {
-        return 10; //technology * 100;
-    }
+    //                 if (neighbourCountries.Contains(countries[i])) {
+    //                     neighbourCountries.Remove(countries[i]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     public Country[] GetCountries() {
         return FindObjectsOfType<Country>();
     }
 
-    public IEnumerator RollWar() { //Does the war logic
-        Debug.Log("Rolling War");
-        float probabilityOfWar = Math.Min(aggressiveness*aggressiveness*aggressiveness,1); //
-        float randomFloat = UnityEngine.Random.Range(0,100)/100;
-        if (randomFloat < probabilityOfWar && connectingCountries != null) {
-            if(connectingCountries != null) {
-                int randomIndex = UnityEngine.Random.Range(0,connectingCountries.Count()-1);
-                Country attackedCountry = connectingCountries[randomIndex];
-                Debug.Log("War Started between" + attackedCountry.CountryName + CountryName);
-                yield return new WaitForSeconds(1);
-                //initiate war
-                inWar = true;
-                //Do the ui stuff
-                int populationInWar = CountryPopulation/4;
-                CountryPopulation-=populationInWar;
-                yield return new WaitForSeconds(10);
 
-                randomFloat = UnityEngine.Random.Range(0,100)/100;
-                if (randomFloat < 0.7f) // win
-                {
-                    Debug.Log("War Ended: " + CountryName + " won");
-                    //add percentage of hunger
-                    //add percentage of faith
-                    CountryPopulation+=populationInWar/2;
-                    
-                }
-                else // loss
-                {
-                    Debug.Log("War Ended: " + attackedCountry.CountryName + " won");
-                    //decrease hunger
-                    //decrease faith if god helped war
-                    //believers of country not added
-                }
-                inWar = false;
-            }
+    private IEnumerator DebugLogCountryInfo() {
+        while (true) {
+            Dictionary<string, string> countryStats = GetCountryStats();
+            countryStats["Time"] = UnityEngine.Time.fixedTime.ToString();
+            Debug.Log(ToDebugString(countryStats));
+            yield return new WaitForSeconds(10);
         }
+    }
+
+    private Dictionary<string, string> GetCountryStats() {
+        Dictionary<string, string> countryStatDict = new Dictionary<string, string>
+        {
+            { "Name", countryName },
+            { "Aggressiveness", Aggressiveness.ToString() },
+            { "In War", isInWar.ToString() },
+            { "Fertility", _fertility.FertilityValue.ToString() },
+            { "Food", _food.FoodValue.ToString() },
+            { "Population Count", PopulationCount.ToString() },
+            { "Faith Proportion", FaithProportion.ToString() },
+            { "TechnologyValue", Technology.ToString() }
+        };
+        return countryStatDict;
+    }
+
+    private string ToDebugString (Dictionary<string, string> dictionary)
+    {
+        return "{" + string.Join(",\n", dictionary.Select(kv => kv.Key + "=" + kv.Value).ToArray()) + "}";
     }
 }

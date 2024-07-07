@@ -115,10 +115,10 @@ public class MapDisplayManager : MonoBehaviour
     // resize grid cell size based on map size. always 16:9 ratio
     void AdjustGrid() {
         // by default, scale of (1, 1) yields a 10x18 grid i think
-        float newScale = 1f / scaleFactor; // yields a non exact fit but reduces chance of going out of frame
+        float newScale = 1f / scaleFactor; // sort of roughly fits it to screen
 
         // may scrap this: cap the in-screen cell resolution so cells don't get too small?
-        newScale = Mathf.Max(newScale, 0.1f);
+        newScale = Mathf.Max(newScale, 0.3f);
 
         grid.transform.localScale = new Vector3(newScale, newScale, 0);
 

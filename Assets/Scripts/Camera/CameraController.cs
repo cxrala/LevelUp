@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private GameObject cameraGameObject;
     [SerializeField] private GameObject cameraTarget;
     public float moveSpeed = 5f;
 

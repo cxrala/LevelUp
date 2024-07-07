@@ -98,7 +98,7 @@ public class MapDisplayManager : MonoBehaviour
     // generates k random colours that look (more or less) good together - totally stole the idea off this btw
     // https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
     List<Color> GenerateColours(int k) {
-        List<Color> colours = new List<Color>();
+        List<Color> colours = new List<Color>(k);
         
         float golden_ratio_conjugate = 0.618033988749895f;
         float h = Random.Range(0f, 1f); // use random start value

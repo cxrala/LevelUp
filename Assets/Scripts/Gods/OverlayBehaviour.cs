@@ -14,7 +14,7 @@ public class OverlayBehaviour : MonoBehaviour
 
     private Image img;
 
-    [SerializeField] private GameObject godsObject;
+    private GameObject godsObject;
 
     void Awake() {
         img = gameObject.GetComponent<Image>();
@@ -24,6 +24,7 @@ public class OverlayBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        godsObject = GameObject.Find("Gods");
         GodProperties gods = godsObject.GetComponent<GodProperties>();
 
         ares = Resources.Load<Sprite>(gods.godData.ares.imgPath);

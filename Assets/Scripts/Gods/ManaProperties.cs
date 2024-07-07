@@ -34,6 +34,10 @@ public class ManaProperties : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        manaBorder = GameObject.Find("ManaBorder");
+        manaShadow = GameObject.Find("ManaShadow");
+        manaContents = GameObject.Find("Mana");
+        Debug.Log(manaBorder);
         currManaShadow = currentMana;
         pointerInformation = GameObject.Find("PointerInformation").GetComponent<PointerInformation>();
         manaBorderRect = manaBorder.GetComponent<RectTransform>();
@@ -44,10 +48,10 @@ public class ManaProperties : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        manaBorderRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxMana + 5);
-        UpdateManaContents();
-        manaContentsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currentMana);
-        manaShadowRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currManaShadow);
+        // manaBorderRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxMana + 5);
+        // UpdateManaContents();
+        // manaContentsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currentMana);
+        // manaShadowRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currManaShadow);
     }
 
     private void UpdateManaContents() {

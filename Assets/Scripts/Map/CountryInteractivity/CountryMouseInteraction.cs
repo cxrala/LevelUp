@@ -5,34 +5,38 @@ using UnityEngine.EventSystems;
 
 public class CountryMouseInteraction : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
 {
+    private PointerInformation pointerInformation;
+    
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("Pointer clicked");
+        Country selectedCountry = gameObject.GetComponent<Country>();
+        pointerInformation.LastClicked = selectedCountry;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Pointer down!");
+        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("Pointer Entered");
+        // TODO: implement shading/stats if time
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("Pointer Exited");
+        // Debug.Log("Pointer Exited");
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        // Debug.Log("Pointer up!");
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Hello world");
+        pointerInformation = GameObject.Find("PointerInformation").GetComponent<PointerInformation>();
     }
 
     // Update is called once per frame

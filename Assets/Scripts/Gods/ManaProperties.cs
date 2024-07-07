@@ -29,10 +29,13 @@ public class ManaProperties : MonoBehaviour
     [SerializeField] private GameObject godsObject;
     [SerializeField] private GameObject godOverlay;
 
+    private PointerInformation pointerInformation;
+
     // Start is called before the first frame update
     void Start()
     {
         currManaShadow = currentMana;
+        pointerInformation = GameObject.Find("PointerInformation").GetComponent<PointerInformation>();
         manaBorderRect = manaBorder.GetComponent<RectTransform>();
         manaContentsRect = manaContents.GetComponent<RectTransform>();
         manaShadowRect = manaShadow.GetComponent<RectTransform>();
@@ -92,15 +95,18 @@ public class ManaProperties : MonoBehaviour
         }
 
         // success, perform action
-        GodAction();
+        GodAction(godName);
         // Show overlay
         godOverlay.GetComponent<OverlayBehaviour>().ShowImageOnClick(godName);
         Debug.Log($"Mana depleted by {amount} units");
         currentMana = newMana > 0 ? newMana : 0;
     }
 
-    public void GodAction() {
+    public void GodAction(string godName) {
         // update listeners with events
+        Country country = pointerInformation.LastClicked;
+        ITrait trait = country.GodBlessing(godName);
+        trait.UpgradeTrait();
         Debug.Log("Successfully performed God action.");
     }
 

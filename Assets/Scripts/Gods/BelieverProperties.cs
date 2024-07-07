@@ -27,14 +27,11 @@ public class BelieverProperties : MonoBehaviour
     public void UpdateBelieverCount(int amount) {
         long newBelieverCount = believerCount + amount;
         if (newBelieverCount > nextBelieverMilestone) {
-            Debug.Log("Next milestone achieved!");
             milestones++;
             manaBarProps.UpgradeManaBar();
             UpdateNextBelieverMilestone(believerCount);
-            Debug.Log(nextBelieverMilestone);
         }
         believerCount = newBelieverCount;
-        Debug.Log(believerCount);
     }
 
     private void UpdateNextBelieverMilestone(long believerCount) {

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Technology : ITrait
@@ -6,6 +8,8 @@ public class Technology : ITrait
 
     private double technologyValue;
     public double TechnologyValue => technologyValue;
+    private double technologyVariable;
+    private double techRadiusFactor;
     private Country coupledCountry;
     private Graph graph;
 
@@ -13,20 +17,35 @@ public class Technology : ITrait
         technologyValue = initialTechValue;
         this.coupledCountry = coupledCountry;
         this.graph = graph;
+        technologyVariable = 0;
+        techRadiusFactor = 100;
     }
 
     public bool UpgradeTrait()
     {
-        double incRate = 1.5f;
-        if (technologyValue * incRate > 1) return false;
-        technologyValue = Math.Max(technologyValue * 1.5, 1f);
+        technologyVariable += 0.5;
+        techRadiusFactor += 10;
+        technologyValue = GetSigmoid(technologyVariable);
         graph.TechnologyUpdated(coupledCountry);
         return true;
     }
 
+    private double GetSigmoid(double val) {
+        return 1 / (1 + Math.Exp(-val));
+    }
+
     public double GetTechnologyRadius() {
         // arbitrary radius for now, max of 100km
-        return technologyValue * 100;
+        return technologyValue * techRadiusFactor;
+    }
+
+    public IEnumerator UpdateTechnology() {
+        while (true) {
+            yield return new WaitForSeconds(2);
+            technologyVariable -= 0.1;
+            technologyValue = GetSigmoid(technologyVariable);
+        }
+
     }
 
 }

@@ -35,7 +35,6 @@ public class OverlayBehaviour : MonoBehaviour
     }
 
     public void ShowImageOnClick(string godName) {
-        Debug.Log($"Showing sprite for {godName}");
         gameObject.SetActive(true);
 
         switch (godName){

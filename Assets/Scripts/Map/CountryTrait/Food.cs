@@ -29,10 +29,8 @@ public class Food : ITrait
 
     public IEnumerator UpdateFood() {
         while (true) {
-            foodValue = (long) (foodValue + 100 * foodRate);
+            foodValue = Math.Max((long) (foodValue + 0.01 * foodRate), 1000);
             yield return new WaitForSeconds(2);
         }
     }
-
-    
 }

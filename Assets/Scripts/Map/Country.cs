@@ -30,6 +30,15 @@ public class Country : MonoBehaviour
     public double TechnologyDistance {
         get => _technology.GetTechnologyRadius();
     }
+    public double Fertility {
+        get => _fertility.FertilityValue;
+    }
+    public double Food {
+        get => GetSigmoid((double) (_food.FoodValue - PopulationCount) / 1000);
+    }
+    private double GetSigmoid(double val) {
+        return 1 / (1 + Math.Exp(-val));
+    }
     public Population Population {
         get => _population;
     }
@@ -63,12 +72,14 @@ public class Country : MonoBehaviour
     }
     
     private void Start() {
-        Init(null, new HashSet<Country>(), "foo", false);
+        Init(null, new HashSet<Country>(), UnityEngine.Random.Range(0, 1000).ToString(), false);
         StartCoroutine(_fertility.DecreaseFertility());
         StartCoroutine(_food.UpdateFood());
         StartCoroutine(_population.SimulatePopulationChange());
         StartCoroutine(WarInitiator());
         StartCoroutine(DebugLogCountryInfo());
+        StartCoroutine(_technology.UpdateTechnology());
+        StartCoroutine(_aggressiveness.UpdateAggressiveness());
     }
 
     private IEnumerator WarInitiator() {
@@ -131,5 +142,19 @@ public class Country : MonoBehaviour
     private string ToDebugString (Dictionary<string, string> dictionary)
     {
         return "{" + string.Join(",\n", dictionary.Select(kv => kv.Key + "=" + kv.Value).ToArray()) + "}";
+    }
+
+    public ITrait GodBlessing(string godName) {
+        switch (godName){
+            case "ares":
+                return _aggressiveness;
+            case "athena":
+                return _technology;
+            case "aphrodite":
+                return _fertility;
+            case "demeter":
+                return _food;
+        }
+        throw new ArgumentException();
     }
 }

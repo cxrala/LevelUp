@@ -66,4 +66,11 @@ public class Aggressiveness : ITrait
         attacker.CompleteWar(numAttackers, numAttackers > numDefenders);
         defender.Population.AddPopulation(numDefenders);
     }
+
+    public IEnumerator UpdateAggressiveness() {
+        while (true) {
+            yield return new WaitForSeconds(1);
+            aggressivenessValue = Math.Clamp(aggressivenessValue -= 0.001, 0, 1);
+        }
+    }
 }

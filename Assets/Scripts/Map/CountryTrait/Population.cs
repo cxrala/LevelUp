@@ -34,13 +34,15 @@ public class Population
 
     public IEnumerator SimulatePopulationChange() {
         while (true) {
-            yield return new WaitForSeconds(15);
+            yield return new WaitForSeconds(3);
             double growth = populationCount * (fertility.FertilityValue - deathRate);
-            populationCount = Math.Clamp((long) Math.Floor(growth) + populationCount, 0, food.FoodValue);
-            if (growth > 0) food.ConsumeFood((long) Math.Floor(growth * 2)); // arbitrary
+            food.ConsumeFood(populationCount);
+            populationCount = Math.Max(0, Math.Min((long) Math.Floor(growth), food.FoodValue) + populationCount);
             if (faithProportion != 0) {
                 IncFaith(faithRate);
             }
+            Debug.Log(food.FoodValue);
+            // Debug.Log(populationCount);
         }
     }
 

@@ -2629,7 +2629,7 @@ MonoBehaviour:
   manaBorder: {fileID: 565720810}
   manaContents: {fileID: 78594375}
   manaShadow: {fileID: 910143131}
-  godsObject: {fileID: 0}
+  godsObject: {fileID: 580175485}
   godOverlay: {fileID: 619382895}
 --- !u!224 &1289563647
 RectTransform:
@@ -4110,8 +4110,8 @@ RectTransform:
   m_Children:
   - {fileID: 1289563647}
   - {fileID: 20927487}
-  - {fileID: 619382899}
   - {fileID: 458133913}
+  - {fileID: 619382899}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -3, z: 0}
   m_AnchorMin: {x: 0, y: 0}

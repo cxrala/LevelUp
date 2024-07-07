@@ -48,10 +48,10 @@ public class ManaProperties : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // manaBorderRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxMana + 5);
-        // UpdateManaContents();
-        // manaContentsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currentMana);
-        // manaShadowRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currManaShadow);
+        manaBorderRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxMana + 5);
+        UpdateManaContents();
+        manaContentsRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currentMana);
+        manaShadowRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, currManaShadow);
     }
 
     private void UpdateManaContents() {
@@ -109,6 +109,7 @@ public class ManaProperties : MonoBehaviour
     public void GodAction(string godName) {
         // update listeners with events
         Country country = pointerInformation.LastClicked;
+        if (!(country == null)) return;
         ITrait trait = country.GodBlessing(godName);
         trait.UpgradeTrait();
         Debug.Log("Successfully performed God action.");

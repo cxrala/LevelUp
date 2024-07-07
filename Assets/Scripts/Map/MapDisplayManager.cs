@@ -54,10 +54,8 @@ public class MapDisplayManager : MonoBehaviour
         // generate and assign colours
         int k = countries.Count;
         List<Color> colours = GenerateColours(k);
-        int i = 0;
         foreach (int countryID in countries.Keys) {
-            countries[countryID].GetComponent<CountryTilemap>().countryColour = colours[i];
-            i++;
+            countries[countryID].GetComponent<CountryTilemap>().countryColour = colours[countryID];
         }
     }
 
@@ -69,7 +67,7 @@ public class MapDisplayManager : MonoBehaviour
         for (int y = 0; y < generated.Height; ++y) {
             List<int> newRow = new List<int>(generated.Width);
             for (int x = 0; x < generated.Width; ++x) {
-                newRow.Add((int) generated.At(x, y).CountryIndex);
+                newRow.Add(1 + (generated.At(x, y).CountryIndex ?? -1));
             }
             map.Add(newRow);
         }
@@ -99,11 +97,12 @@ public class MapDisplayManager : MonoBehaviour
     // https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
     List<Color> GenerateColours(int k) {
         List<Color> colours = new List<Color>(k);
+        colours.Add(Color.blue);
         
         float golden_ratio_conjugate = 0.618033988749895f;
         float h = Random.Range(0f, 1f); // use random start value
         
-        for (int i = 0; i < k; i++) {
+        for (int i = 1; i < k; i++) {
             colours.Add(Color.HSVToRGB(h, 0.4f, 0.95f));
             h += golden_ratio_conjugate;
             h %= 1;
@@ -118,7 +117,7 @@ public class MapDisplayManager : MonoBehaviour
         float newScale = 1f / scaleFactor; // sort of roughly fits it to screen
 
         // may scrap this: cap the in-screen cell resolution so cells don't get too small?
-        newScale = Mathf.Max(newScale, 0.3f);
+        //newScale = Mathf.Max(newScale, 0.3f);
 
         grid.transform.localScale = new Vector3(newScale, newScale, 0);
 
